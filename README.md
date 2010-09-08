@@ -5,11 +5,13 @@ Installerating
 ------
  * Get [leiningen](http://github.com/technomancy/leiningen)
 
+<pre>
     git clone ...
     cd couchmail
     lein deps
     #abuse nailgun:
     ./start.sh&
+</pre>
 
 Usage
 -------
