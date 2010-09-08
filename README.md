@@ -9,6 +9,8 @@ Installerating
 git clone ...
 cd couchmail
 lein deps
+#compile gen-class for nailgun nail
+lein compile 
 #abuse nailgun:
 ./start.sh&
 </pre>
