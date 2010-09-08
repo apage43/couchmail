@@ -38,8 +38,10 @@
        (map bean (seq adarray))))
 
 (defn simplify-part [part]
-  (merge (only '(:size :contentType :content :disposition) part)
-         {:headers (headers-map (:allHeaders part))}))
+  (merge (only '(:size :contentType :disposition) part)
+         {:content (if (= (.getClass (:content part)) String) (:content part)
+                     (String. (io/to-byte-array (:inputStream part))))
+          :headers (headers-map (:allHeaders part))}))
 
 (defn encode-attachment [part]
   [(:fileName part) {:content_type (:contentType part)
@@ -47,7 +49,7 @@
 
 (defn simplify-message [msg]
   (let [bmsg (bean msg)
-        content (parts (:content bmsg))
+        content (if (multipart? bmsg) (parts (:content bmsg)) (list bmsg))
         mailparts (filter (fn [p] (and (not (attachment? p)) (not (multipart? p)))) content)
         subparts (mapcat #(parts (:content %)) (filter multipart? content))
         attachments (filter #(attachment? %) content)]
