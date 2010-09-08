@@ -1,9 +1,9 @@
 (ns couchmail
   (:require [clojure.contrib.io :as io])
   (:require [clj-http.client :as http])
-  (:require [clojure.contrib.base64 :as base64])
   (:use clojure.contrib.json)
   (:import vimclojure.nailgun.NGContext)
+  (:import org.apache.commons.codec.binary.Base64)
   (:import javax.mail.internet.MimeMessage)
   (:import javax.mail.internet.MimeMultipart)
   (:import javax.mail.Message$RecipientType)
@@ -43,7 +43,7 @@
 
 (defn encode-attachment [part]
   [(:fileName part) {:content_type (:contentType part)
-                     :data (base64/encode-str (:content part))}])
+                     :data (String. (Base64/encodeBase64 (io/to-byte-array (:inputStream part))))}])
 
 (defn simplify-message [msg]
   (let [bmsg (bean msg)
