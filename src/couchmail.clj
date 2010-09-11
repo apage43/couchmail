@@ -66,5 +66,7 @@
   (MimeMessage. (Session/getInstance (java.util.Properties.)) instream))
 
 (defn Store-nailMain [ctx]
-  (http/post "http://127.0.0.1:5984/mail" {:body (json-str (simplify-message (create-message (.in ctx)))) :content-type :json})
-  (println "OK"))
+  (let [args (seq (.getArgs ctx))
+        dburl (if (= 1 (count args)) (first args) "http://127.0.0.1:5984/mail")]
+    (http/post "http://127.0.0.1:5984/mail" {:body (json-str (simplify-message (create-message (.in ctx)))) :content-type :json})
+    (println "OK")))

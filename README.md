@@ -3,16 +3,13 @@ couchmail
 
 Installerating
 ------
- * Get [leiningen](http://github.com/technomancy/leiningen)
+ * Get [cake](http://github.com/ninjudd/cake)
 
 <pre>
 git clone ...
 cd couchmail
-lein deps
-#compile gen-class for nailgun nail
-lein compile 
-#abuse nailgun:
-./start.sh&
+cake compile 
+./start.sh &
 </pre>
 
 Usage
@@ -22,6 +19,6 @@ Start a nailgun server (currently I develop with vimclojure and am lazy, so this
 Send email to be stored to couchdb in MIME to the couchmail.Store Nail with the nailgun client (brew install nailgun, dude).
 
 Example .fetchmailrc:
-    poll imap.mailserver.com protocol imap user "someguy@placeville.io" password "hunter2" mda "/usr/local/bin/ng couchmail.Store" ssl
+    poll imap.mailserver.com protocol imap user "someguy@placeville.io" password "hunter2" mda "/usr/local/bin/ng couchmail.Store http://127.0.0.1:5984/mail" ssl
 
 
