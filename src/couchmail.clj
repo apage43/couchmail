@@ -24,7 +24,7 @@
 (def BCC Message$RecipientType/BCC)
 
 (defn multipart? [p] (= MimeMultipart (.getClass (:content p))))
-(defn attachment? [p] (= "attachment" (:disposition p)))
+(defn attachment? [p] (:fileName p)) ;;Beh. Anything with a filename should become a couchdb attachment. (Read: inline images.)
 
 (defn parts [multipart]
   (map #(bean (.getBodyPart multipart %)) (range (.getCount multipart))))
