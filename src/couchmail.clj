@@ -47,13 +47,19 @@
   [(:fileName part) {:content_type (:contentType part)
                      :data (String. (Base64/encodeBase64 (io/to-byte-array (:inputStream part))))}])
 
+(defn attach-id-mapping [part]
+  (let [headers (headers-map (:allHeaders part))]
+    (if (headers "X-Attachment-Id")
+      {(headers "X-Attachment-Id") (:fileName part)})))
+
 (defn simplify-message [msg]
   (let [bmsg (bean msg)
         content (if (multipart? bmsg) (parts (:content bmsg)) (list bmsg))
         mailparts (filter (fn [p] (and (not (attachment? p)) (not (multipart? p)))) content)
         subparts (mapcat #(parts (:content %)) (filter multipart? content))
         attachments (filter #(attachment? %) content)]
-    (merge (only '(:subject :messageID) bmsg)
+    (merge (only '(:subject :messageID) bmsg) 
+      (if (> (count attachments) 0) {:attach_id_map (apply merge (map attach-id-mapping attachments))})
       {:headers (headers-map (:allHeaders bmsg))
        :_attachments (reduce conj {} (map encode-attachment attachments))
        :parts (map simplify-part (concat mailparts subparts))
