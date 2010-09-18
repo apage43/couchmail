@@ -73,6 +73,7 @@
 
 (defn Store-nailMain [ctx]
   (let [args (seq (.getArgs ctx))
-        dburl (if (= 1 (count args)) (first args) "http://127.0.0.1:5984/mail")]
-    (http/post dburl {:body (json-str (simplify-message (create-message (.in ctx)))) :content-type :json})
+        dburl (if (< 0 (count args)) (first args) "http://127.0.0.1:5984/mail")
+        merged (if (< 1 (count args)) (read-json (second args)) {})]
+    (http/post dburl {:body (json-str (merge merged (simplify-message (create-message (.in ctx))))) :content-type :json})
     (println "OK")))
